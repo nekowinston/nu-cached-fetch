@@ -104,7 +104,7 @@ def from-guess [] -> any {
       $data | try { from toml } catch {
         $data | try { from xml } catch {
           $data | try { from msgpack } catch {
-            $data | try {from msgpackz} catch {
+            $data | try { from msgpackz } catch {
               $data | try { from csv } catch {
                 $data | try { from tsv } catch {
                   $data | try { from ssv } catch {
