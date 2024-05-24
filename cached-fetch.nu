@@ -76,11 +76,10 @@ def cached-open [path: string, raw: bool, full: bool] -> any {
         "text/csv" => ($data | from csv)
         "text/tab-separated-values" => ($data | from tsv)
         "text/yaml" => ($data | from yaml)
-        # stupidly try to parse all supported formats
-        _ =>  ($data | into-guess)
+        _ =>  ($data | from-guess)
       }
     }
-  } else {$data}
+  } else { $data }
 
   if $full {
     {
@@ -96,8 +95,8 @@ def cached-open [path: string, raw: bool, full: bool] -> any {
   } else { $parsed }
 }
 
-
-def into-guess [] -> any {
+# stupidly try to parse all supported formats
+def from-guess [] -> any {
   let data = $in
 
   $data | try { from json } catch {
