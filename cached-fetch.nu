@@ -10,7 +10,7 @@ let cacheDb = $cacheDir | path join "cache.sqlite"
 # --max-time (-m): string      # timeout period in seconds
 # --insecure (-k)              # allow insecure server connections when using SSL
 
-export def cached-download [
+export def cached-fetch [
   url: string                  # The URL to fetch the contents from.
   --ttl (-t): duration = 7day  # The duration to cache the contents for.
   --headers (-H): any          # custom headers you want to add
