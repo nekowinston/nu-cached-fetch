@@ -60,11 +60,11 @@ def cached-open [path: string, raw: bool, full: bool] -> any {
   let metadata = (open $cacheDb).main | where "shasum" == $path | first
 
   let parsed = if not ($raw or $metadata.contentType == "application/octet-stream") {
-    if (($metadata.contentType | str contains "+json") or ($metadata.fileName =~ "\\.json[5c]?$")) {
+    if (($metadata.contentType =~ "\\+json$") or ($metadata.fileName =~ "\\.json[5c]?$")) {
       $data | from json
     } else if ($metadata.fileName =~ "\\.ya?ml$") {
       $data | from yaml
-    } else if (($metadata.contentType | str contains "+xml") or ($metadata.fileName | str ends-with ".xml")) {
+    } else if (($metadata.contentType =~ "\\+xml$") or ($metadata.fileName =~ "\\.xml$")) {
       $data | from xml
     } else {
       match $metadata.contentType {
@@ -122,4 +122,3 @@ def into-guess [] -> any {
     }
   }
 }
-
