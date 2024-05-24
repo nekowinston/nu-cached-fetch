@@ -69,10 +69,11 @@ def cached-open [path: string, raw: bool, full: bool] -> any {
     } else {
       match $metadata.contentType {
         "application/json" => ($data | from json)
-        "application/xml" | "text/xml" => ($data | from xml)
+        "application/msgpack" => ($data | from msgpack)
         "application/toml" => ($data | from toml)
         "application/vnd.oasis.opendocument.spreadsheet" => ($data | from ods)
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => ($data | from xlsx)
+        "application/xml" | "text/xml" => ($data | from xml)
         "text/csv" => ($data | from csv)
         "text/tab-separated-values" => ($data | from tsv)
         "text/yaml" => ($data | from yaml)
