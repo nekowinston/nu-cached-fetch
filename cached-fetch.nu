@@ -76,10 +76,12 @@ def cached-open [path: string, raw: bool, full: bool] -> any {
         "text/csv" => ($data | from csv)
         "text/tab-separated-values" => ($data | from tsv)
         "text/yaml" => ($data | from yaml)
-        _ =>  ($data | from-guess)
+        _ =>  ($data | from guess)
       }
-    }
-  } else { $data }
+    } | into record
+  } else { 
+    $data
+  }
 
   if $full {
     {
@@ -89,14 +91,16 @@ def cached-open [path: string, raw: bool, full: bool] -> any {
           "content-disposition": $"filename=($metadata.fileName)"
         }
       },
-      body: $data,
+      body: $parsed,
       status: $metadata.status,
     }
-  } else { $parsed }
+  } else {
+    $parsed
+  }
 }
 
 # stupidly try to parse all supported formats
-def from-guess [] -> any {
+def "from guess" [] -> any {
   let data = $in
 
   $data | try { from json } catch {
