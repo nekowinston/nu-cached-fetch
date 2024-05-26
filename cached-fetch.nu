@@ -33,13 +33,13 @@ export def cached-fetch [
     let contentType = $headers
       | get content-type?
       | default "application/octet-stream"
-      | parse --regex "([^;\\n]*)"
+      | parse --regex `([^;\n]*)`
       | get capture0
       | first
     let fileName = $headers
       | get content-disposition?
       | default $"filename=($url | url parse | get path | path basename)"
-      | parse --regex "filename[^;=\\n]*=((['\"]).*?\\2|[^;\\n]*)"
+      | parse --regex `filename[^;=\n]*=((['\"]).*?\2|[^;\n]*)`
       | get capture0
       | first
 
@@ -60,11 +60,11 @@ def cached-open [path: string, raw: bool, full: bool] -> any {
   let metadata = (open $cacheDb).main | where "shasum" == $path | first
 
   let parsed = if not ($raw or $metadata.contentType == "application/octet-stream") {
-    if (($metadata.contentType =~ "\\+json$") or ($metadata.fileName =~ "\\.json[5c]?$")) {
+    if (($metadata.contentType =~ `\+json$`) or ($metadata.fileName =~ `\.json[5c]?$`)) {
       $data | from json
-    } else if ($metadata.fileName =~ "\\.ya?ml$") {
+    } else if ($metadata.fileName =~ `\.ya?ml$`) {
       $data | from yaml
-    } else if (($metadata.contentType =~ "\\+xml$") or ($metadata.fileName =~ "\\.xml$")) {
+    } else if (($metadata.contentType =~ `\+xml$`) or ($metadata.fileName =~ `\.xml$`)) {
       $data | from xml
     } else {
       match $metadata.contentType {
